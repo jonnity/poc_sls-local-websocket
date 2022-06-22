@@ -1,15 +1,12 @@
 import type { AWS } from "@serverless/typescript";
 
+import resources from "./serverless_config/serverless-dynamodb-scheme.json";
 import hello from "@functions/hello";
 
 const serverlessConfiguration: AWS = {
   service: "sls-test",
   frameworkVersion: "3",
-  plugins: [
-    "serverless-esbuild",
-    "serverless-dynamodb-local",
-    "serverless-offline",
-  ],
+  plugins: ["serverless-esbuild", "serverless-dynamodb-local", "serverless-offline"],
   provider: {
     name: "aws",
     runtime: "nodejs14.x",
@@ -50,7 +47,7 @@ const serverlessConfiguration: AWS = {
           sources: [
             {
               table: "jankens",
-              sources: ["./migrations/jankens.json"],
+              sources: ["./serverless-dynamodb-migration.json"],
             },
           ],
         },
@@ -61,33 +58,7 @@ const serverlessConfiguration: AWS = {
     Resources: {
       JankensTable: {
         Type: "AWS::DynamoDB::Table",
-        Properties: {
-          TableName: "jankens",
-          AttributeDefinitions: [
-            {
-              AttributeName: "player",
-              AttributeType: "S",
-            },
-            {
-              AttributeName: "unixtime",
-              AttributeType: "N",
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: "player",
-              KeyType: "HASH",
-            },
-            {
-              AttributeName: "unixtime",
-              KeyType: "RANGE",
-            },
-          ],
-          ProvisionedThroughput: {
-            ReadCapacityUnits: 1,
-            WriteCapacityUnits: 1,
-          },
-        },
+        Properties: resources,
       },
     },
   },

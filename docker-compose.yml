@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  dynamodb-local:
+    container_name: test_dynamodb-local
+    image: amazon/dynamodb-local:latest
+    user: root
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    volumes:
+      - dynamodb-local-data:/data
+    ports:
+      - 8000:8000
+    networks:
+      - dynamodb-local-network
+
+  dynamodb-admin:
+    container_name: test_dynamodb-admin
+    image: aaronshaf/dynamodb-admin:latest
+    environment:
+      - DYNAMO_ENDPOINT=dynamodb-local:8000
+    ports:
+      - 8001:8001
+    depends_on:
+      - dynamodb-local
+    networks:
+      - dynamodb-local-network
+
+  dynamodb_migrator:
+    image: banst/awscli:1.18.76
+    container_name: app-dynamodb_migrator
+    working_dir: /home/dynamodblocal
+    command: dynamodb create-table --cli-input-json file://serverless-dynamodb-scheme.json --endpoint-url http://dynamodb:8000
+    volumes:
+      - ./serverless_config:/home/dynamodblocal
+    environment:
+      - AWS_ACCESS_KEY_ID=unicorn_user
+      - AWS_SECRET_ACCESS_KEY=magical_password
+      - AWS_DEFAULT_REGION=ap-southeast-1
+    depends_on:
+      - dynamodb-local
+    networks:
+      - dynamodb-local-network
+
+  dynamodb_seeder:
+    image: banst/awscli:1.18.76
+    container_name: app-dynamodb_seeder
+    working_dir: /home/dynamodblocal
+    command: dynamodb batch-write-item --request-items file://serverless-dynamodb-migration.json --endpoint-url http://dynamodb:8000
+    volumes:
+      - ./serverless_config:/home/dynamodblocal
+    environment:
+      - AWS_ACCESS_KEY_ID=unicorn_user
+      - AWS_SECRET_ACCESS_KEY=magical_password
+      - AWS_DEFAULT_REGION=ap-southeast-1
+    depends_on:
+      - dynamodb_migrator
+      - dynamodb-local
+    networks:
+      - dynamodb-local-network
+    restart: on-failure
+
+volumes:
+  dynamodb-local-data:
+
+networks:
+  dynamodb-local-network:
+    driver: bridge

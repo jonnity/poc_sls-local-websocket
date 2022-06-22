@@ -1,11 +1,27 @@
 {
-  "jankens": [
+  "TableName": "jankens",
+  "AttributeDefinitions": [
     {
-      "player": "user1",
-      "unixtime": 1482418800,
-      "player_hand": "rock",
-      "computer_hand": "paper",
-      "judge": "lose"
+      "AttributeName": "player",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "unixtime",
+      "AttributeType": "N"
     }
-  ]
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "player",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "unixtime",
+      "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
 }

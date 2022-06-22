@@ -5,7 +5,8 @@
   "main": "serverless.ts",
   "scripts": {
     "dev": "sls offline",
-    "setup": "docker-compose -f ./dynamodb_local/docker-compose.yml up",
+    "setup": "docker-compose up",
+    "postsetup": "docker-compose down",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {

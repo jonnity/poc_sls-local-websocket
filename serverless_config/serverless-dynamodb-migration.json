@@ -1,0 +1,27 @@
+{
+  "TableName": "jankens",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "player",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "unixtime",
+      "AttributeType": "N"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "player",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "unixtime",
+      "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}

@@ -1,15 +1,14 @@
 import type { AWS } from "@serverless/typescript";
 
+import resources from "./serverless_config/serverless-dynamodb-migration.json";
 import hello from "@functions/hello";
+import getJankenResults from "@functions/getJankenResults";
+import playJanken from "@functions/playJanken";
 
 const serverlessConfiguration: AWS = {
   service: "sls-test",
   frameworkVersion: "3",
-  plugins: [
-    "serverless-esbuild",
-    "serverless-dynamodb-local",
-    "serverless-offline",
-  ],
+  plugins: ["serverless-esbuild", "serverless-dynamodb-local", "serverless-offline"],
   provider: {
     name: "aws",
     runtime: "nodejs14.x",
@@ -23,7 +22,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { hello, getJankenResults, playJanken },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -50,7 +49,7 @@ const serverlessConfiguration: AWS = {
           sources: [
             {
               table: "jankens",
-              sources: ["./migrations/jankens.json"],
+              sources: ["./serverless-dynamodb-migration.json"],
             },
           ],
         },
@@ -61,33 +60,7 @@ const serverlessConfiguration: AWS = {
     Resources: {
       JankensTable: {
         Type: "AWS::DynamoDB::Table",
-        Properties: {
-          TableName: "jankens",
-          AttributeDefinitions: [
-            {
-              AttributeName: "player",
-              AttributeType: "S",
-            },
-            {
-              AttributeName: "unixtime",
-              AttributeType: "N",
-            },
-          ],
-          KeySchema: [
-            {
-              AttributeName: "player",
-              KeyType: "HASH",
-            },
-            {
-              AttributeName: "unixtime",
-              KeyType: "RANGE",
-            },
-          ],
-          ProvisionedThroughput: {
-            ReadCapacityUnits: 1,
-            WriteCapacityUnits: 1,
-          },
-        },
+        Properties: resources,
       },
     },
   },

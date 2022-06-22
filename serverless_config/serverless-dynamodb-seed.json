@@ -1,0 +1,15 @@
+{
+  "jankens": [
+    {
+      "PutRequest": {
+        "Item": {
+          "player": { "S": "user1" },
+          "unixtime": { "N": "1482418800" },
+          "player_hand": { "S": "rock" },
+          "computer_hand": { "S": "paper" },
+          "judge": { "S": "lose" }
+        }
+      }
+    }
+  ]
+}

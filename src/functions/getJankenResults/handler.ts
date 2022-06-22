@@ -15,10 +15,10 @@ const getJankenList: ValidatedEventAPIGatewayProxyEvent<null> = async (event, co
         TableName: "jankens",
       })
     );
-    return formatJSONResponse({ statusCode: 200, body: JSON.stringify(data.Items) });
+    return formatJSONResponse(200, { results: data.Items });
   } catch (err: any) {
     console.error(err);
-    return formatJSONResponse({ statusCode: 500, body: "ScanItem Error" });
+    return formatJSONResponse(500, { message: "ScanItem Error" });
   }
 };
 

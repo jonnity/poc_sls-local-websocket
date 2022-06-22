@@ -39,18 +39,17 @@ const playJanken: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
         },
       })
     );
-    return formatJSONResponse({
-      status: 200,
-      body: JSON.stringify({
+    return formatJSONResponse(200, {
+      result: {
         player: player_hand,
         computer: hand[computer],
         unixtime: unixtime,
         judge: judge,
-      }),
+      },
     });
   } catch (err) {
     console.error(err);
-    return formatJSONResponse({ status: 500, message: "PutItem Error" });
+    return formatJSONResponse(500, { message: "PutItem Error" });
   }
 };
 

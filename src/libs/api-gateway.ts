@@ -8,10 +8,6 @@ export type ValidatedEventAPIGatewayProxyEvent<S> = (
   event: ValidatedAPIGatewayProxyEvent<S>,
   context: Context
 ) => Promise<APIGatewayProxyResult>;
-// export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<
-//   ValidatedAPIGatewayProxyEvent<S>,
-//   APIGatewayProxyResult
-// >;
 
 export const formatJSONResponse = (status: number, response: Record<string, unknown>) => {
   return {

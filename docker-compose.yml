@@ -27,7 +27,9 @@ services:
     image: banst/awscli:1.18.76
     container_name: app-dynamodb_migrator
     working_dir: /home/dynamodblocal
-    command: dynamodb create-table --cli-input-json file://dynamodb-jankens-migration.json --endpoint-url http://dynamodb-local:8000
+    command: >
+        dynamodb create-table --cli-input-json file://dynamodb-jankens-migration.json --endpoint-url http://dynamodb-local:8000 &&
+        dynamodb create-table --cli-input-json file://dynamodb-connections-migration.json --endpoint-url http://dynamodb-local:8000
     volumes:
       - ./serverless_config:/home/dynamodblocal
     environment:

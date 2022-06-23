@@ -29,7 +29,7 @@ const onSendMessage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
     connectionData.Items.forEach(async ({ connectionId }) => {
       try {
         await apigwManagementApi
-          .postToConnection({ ConnectionId: connectionId as unknown as string, Data: postData }, undefined)
+          .postToConnection({ ConnectionId: connectionId.S, Data: postData.message }, undefined)
           .promise();
       } catch (e) {
         if (e.statusCode === 410) {

@@ -4,7 +4,7 @@
   "description": "Serverless aws-nodejs-typescript template",
   "main": "serverless.ts",
   "scripts": {
-    "dev": "sls offline",
+    "dev": "set AWS_ACCESS_KEY_ID=your_key_id&&set AWS_SECRET_ACCESS_KEY=your_secret_key&&sls offline",
     "setup": "docker-compose up",
     "postsetup": "docker-compose down",
     "test": "echo \"Error: no test specified\" && exit 1"

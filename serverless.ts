@@ -1,7 +1,7 @@
 import type { AWS } from "@serverless/typescript";
 
 import resources from "./serverless_config/dynamodb-jankens-migration.json";
-import { hello, getJankenResults, playJanken, onConnect } from "@functions/index";
+import { hello, getJankenResults, playJanken, onConnect, onDisconnect, onSendMessage } from "@functions/index";
 
 const serverlessConfiguration: AWS = {
   service: "sls-test",
@@ -20,7 +20,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello, getJankenResults, playJanken, onConnect },
+  functions: { hello, getJankenResults, playJanken, onConnect, onDisconnect, onSendMessage },
   package: { individually: true },
   custom: {
     esbuild: {

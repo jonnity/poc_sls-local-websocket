@@ -6,7 +6,7 @@ import { middyfy } from "@libs/lambda";
 import { getDynamoClient } from "@domain/dynamodb";
 import schema from "./schema";
 
-const onDisconnect: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event, context) => {
+const onSendMessage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
@@ -48,4 +48,4 @@ const onDisconnect: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (e
   }
 };
 
-export const main = middyfy(onDisconnect);
+export const main = middyfy(onSendMessage);

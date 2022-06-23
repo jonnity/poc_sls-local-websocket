@@ -23,26 +23,39 @@ services:
     networks:
       - dynamodb-local-network
 
-  dynamodb_migrator:
-    image: banst/awscli:1.18.76
-    container_name: app-dynamodb_migrator
+  dynamodb_jankens_migrator:
+    image: amazon/aws-cli:latest
+    container_name: dynamodb_jankens_migrator
     working_dir: /home/dynamodblocal
-    command: >
-        dynamodb create-table --cli-input-json file://dynamodb-jankens-migration.json --endpoint-url http://dynamodb-local:8000 &&
-        dynamodb create-table --cli-input-json file://dynamodb-connections-migration.json --endpoint-url http://dynamodb-local:8000
+    command: dynamodb create-table --cli-input-json file://dynamodb-jankens-migration.json --endpoint-url http://dynamodb-local:8000
     volumes:
       - ./serverless_config:/home/dynamodblocal
     environment:
       - AWS_ACCESS_KEY_ID=unicorn_user
       - AWS_SECRET_ACCESS_KEY=magical_password
-      - AWS_DEFAULT_REGION=ap-southeast-1
+      - AWS_DEFAULT_REGION=localhost
+    depends_on:
+      - dynamodb-local
+    networks:
+      - dynamodb-local-network
+  dynamodb_connections_migrator:
+    image: amazon/aws-cli:latest
+    container_name: dynamodb_connections_migrator
+    working_dir: /home/dynamodblocal
+    command: dynamodb create-table --cli-input-json file://dynamodb-connections-migration.json --endpoint-url http://dynamodb-local:8000
+    volumes:
+      - ./serverless_config:/home/dynamodblocal
+    environment:
+      - AWS_ACCESS_KEY_ID=unicorn_user
+      - AWS_SECRET_ACCESS_KEY=magical_password
+      - AWS_DEFAULT_REGION=localhost
     depends_on:
       - dynamodb-local
     networks:
       - dynamodb-local-network
 
   dynamodb_seeder:
-    image: banst/awscli:1.18.76
+    image: amazon/aws-cli:latest
     container_name: app-dynamodb_seeder
     working_dir: /home/dynamodblocal
     command: dynamodb batch-write-item --request-items file://dynamodb-jankens-seed.json --endpoint-url http://dynamodb-local:8000
@@ -51,9 +64,9 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=unicorn_user
       - AWS_SECRET_ACCESS_KEY=magical_password
-      - AWS_DEFAULT_REGION=ap-southeast-1
+      - AWS_DEFAULT_REGION=localhost
     depends_on:
-      - dynamodb_migrator
+      - dynamodb_jankens_migrator
       - dynamodb-local
     networks:
       - dynamodb-local-network

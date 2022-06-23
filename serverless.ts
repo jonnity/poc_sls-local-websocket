@@ -1,6 +1,6 @@
 import type { AWS } from "@serverless/typescript";
 
-import resources from "./serverless_config/serverless-dynamodb-migration.json";
+import resources from "./serverless_config/dynamodb-jankens-migration.json";
 import hello from "@functions/hello";
 import getJankenResults from "@functions/getJankenResults";
 import playJanken from "@functions/playJanken";
@@ -49,7 +49,7 @@ const serverlessConfiguration: AWS = {
           sources: [
             {
               table: "jankens",
-              sources: ["./serverless-dynamodb-migration.json"],
+              sources: ["./dynamodb-jankens-migration.json"],
             },
           ],
         },

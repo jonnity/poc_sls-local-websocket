@@ -24,7 +24,7 @@ const onDisconnect: ValidatedEventAPIGatewayProxyEvent<null> = async (event, con
     });
   } catch (err) {
     console.error(err);
-    return formatJSONResponse(500, { message: "onConnect Error" });
+    return formatJSONResponse(500, { message: "onDisconnect Error" });
   }
 };
 

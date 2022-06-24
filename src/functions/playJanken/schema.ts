@@ -2,7 +2,7 @@ export default {
   type: "object",
   properties: {
     name: { type: "string" },
-    hand: { type: "number" },
+    hand: { type: "string" },
   },
   required: ["name", "hand"],
 } as const;

@@ -20,8 +20,8 @@ const playJanken: ValidatedAPIGatewayHandler<typeof schema> = async (event, cont
   const unixtime = Math.floor(date.getTime() / 1000);
 
   const hand = ["rock", "scissors", "paper"];
-  const player_name = event.queryStringParameters.name;
-  const player_hand = event.queryStringParameters.hand;
+  const player_name = event.body.name;
+  const player_hand = event.body.hand;
   const player = hand.indexOf(player_hand);
   const computer = Math.floor(Math.random() * 3);
   const judge = judgeJanken(player, computer);

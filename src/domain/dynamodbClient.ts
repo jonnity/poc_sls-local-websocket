@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-export const getDynamoClient = () => {
+export const getDynamodbClient = () => {
   if (process.env.IS_OFFLINE) {
     return new DynamoDBClient({
       region: "localhost",

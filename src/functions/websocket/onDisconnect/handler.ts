@@ -2,14 +2,13 @@ import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 import type { APIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { getDynamoClient } from "@domain/dynamodb";
+import { getDynamodbClient } from "@domain/dynamodbClient";
 
 const onDisconnect: APIGatewayHandler = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
-  const dynamodb = getDynamoClient();
-
+  const dynamodb = getDynamodbClient();
   try {
     await dynamodb.send(
       new DeleteItemCommand({

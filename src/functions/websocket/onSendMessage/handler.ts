@@ -3,14 +3,13 @@ import { DeleteItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 import type { APIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { getDynamoClient } from "@domain/dynamodb";
+import { getDynamodbClient } from "@domain/dynamodbClient";
 
 const onSendMessage: APIGatewayHandler = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
-  const dynamodb = getDynamoClient();
-
+  const dynamodb = getDynamodbClient();
   try {
     const connectionData = await dynamodb.send(
       new ScanCommand({
@@ -21,8 +20,10 @@ const onSendMessage: APIGatewayHandler = async (event, context) => {
 
     const apigwManagementApi = new ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
-      endpoint: "http://localhost:3001",
-      // endpoint: event.requestContext.domainName + "/" + event.requestContext.stage,
+      endpoint:
+        event.requestContext.domainName === "localhost"
+          ? "http://localhost:3001"
+          : `${event.requestContext.domainName}/${event.requestContext.stage}`,
     });
     const bodyJson = JSON.parse(event.body);
 

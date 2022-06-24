@@ -13,10 +13,10 @@
     "node": ">=14.15.0"
   },
   "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.112.0",
     "@aws-sdk/client-dynamodb": "^3.113.0",
     "@middy/core": "^2.5.3",
     "@middy/http-json-body-parser": "^2.5.3",
-    "aws-sdk": "^2.1158.0",
     "dotenv": "^16.0.1"
   },
   "devDependencies": {

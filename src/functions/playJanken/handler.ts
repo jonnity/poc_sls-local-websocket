@@ -2,7 +2,7 @@ import { PutItemCommand } from "@aws-sdk/client-dynamodb";
 import type { ValidatedAPIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { getDynamoClient } from "src/domain/dynamodb";
+import { getDynamodbClient } from "@domain/dynamodbClient";
 import schema from "./schema";
 const judgeJanken = (a: number, b: number) => {
   var c = (a - b + 3) % 3;
@@ -15,7 +15,7 @@ const playJanken: ValidatedAPIGatewayHandler<typeof schema> = async (event, cont
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
-  const dynamodb = getDynamoClient();
+  const dynamodb = getDynamodbClient();
   const date = new Date();
   const unixtime = Math.floor(date.getTime() / 1000);
 

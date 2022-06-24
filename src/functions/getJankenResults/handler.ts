@@ -2,13 +2,13 @@ import { ScanCommand } from "@aws-sdk/client-dynamodb";
 import type { ValidatedAPIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { getDynamoClient } from "src/domain/dynamodb";
+import { getDynamodbClient } from "@domain/dynamodbClient";
 
 const getJankenList: ValidatedAPIGatewayHandler<null> = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
-  const dynamodb = getDynamoClient();
+  const dynamodb = getDynamodbClient();
   try {
     const data = await dynamodb.send(
       new ScanCommand({

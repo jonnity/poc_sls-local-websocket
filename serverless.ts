@@ -7,7 +7,7 @@ import { hello, getJankenResults, playJanken, onConnect, onDisconnect, onSendMes
 const serverlessConfiguration: AWS = {
   service: "sls-test",
   frameworkVersion: "3",
-  plugins: ["serverless-esbuild", "serverless-dynamodb-local", "serverless-offline"],
+  plugins: ["serverless-esbuild", "serverless-offline"],
   provider: {
     name: "aws",
     runtime: "nodejs14.x",
@@ -34,26 +34,6 @@ const serverlessConfiguration: AWS = {
       define: { "require.resolve": undefined },
       platform: "node",
       concurrency: 10,
-    },
-    dynamodb: {
-      stages: ["dev"],
-      start: {
-        port: 8000,
-        noStart: true,
-        inMemory: true,
-        migrate: true,
-        seed: true,
-      },
-      seed: {
-        development: {
-          sources: [
-            {
-              table: "jankens",
-              sources: ["./dynamodb-jankens-migration.json"],
-            },
-          ],
-        },
-      },
     },
   },
   resources: {

@@ -1,6 +1,7 @@
 import type { AWS } from "@serverless/typescript";
 
-import resources from "./serverless_config/dynamodb-jankens-migration.json";
+import jankensMigration from "./serverless_config/dynamodb-jankens-migration.json";
+import connectionsMigration from "./serverless_config/dynamodb-connections-migration.json";
 import { hello, getJankenResults, playJanken, onConnect, onDisconnect, onSendMessage } from "@functions/index";
 
 const serverlessConfiguration: AWS = {
@@ -10,6 +11,7 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: "aws",
     runtime: "nodejs14.x",
+    websocketsApiRouteSelectionExpression: "$request.body.action",
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -58,7 +60,11 @@ const serverlessConfiguration: AWS = {
     Resources: {
       JankensTable: {
         Type: "AWS::DynamoDB::Table",
-        Properties: resources,
+        Properties: jankensMigration,
+      },
+      ConnectionsTable: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: connectionsMigration,
       },
     },
   },

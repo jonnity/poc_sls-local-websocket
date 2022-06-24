@@ -22,14 +22,15 @@ const onSendMessage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
 
     const apigwManagementApi = new ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
-      endpoint: event.requestContext.domainName + "/" + event.requestContext.stage,
+      endpoint: "http://localhost:3001",
+      // endpoint: event.requestContext.domainName + "/" + event.requestContext.stage,
     });
-    const postData = event.body;
+    const message = event.body;
 
     connectionData.Items.forEach(async ({ connectionId }) => {
       try {
         await apigwManagementApi
-          .postToConnection({ ConnectionId: connectionId.S, Data: postData.message }, undefined)
+          .postToConnection({ ConnectionId: connectionId.S, Data: JSON.stringify(message) }, undefined)
           .promise();
       } catch (e) {
         if (e.statusCode === 410) {

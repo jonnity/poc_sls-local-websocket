@@ -1,10 +1,10 @@
 import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
-import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import type { APIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import { getDynamoClient } from "@domain/dynamodb";
 
-const onDisconnect: ValidatedEventAPIGatewayProxyEvent<null> = async (event, context) => {
+const onDisconnect: APIGatewayHandler = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 

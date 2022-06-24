@@ -4,5 +4,5 @@ export default {
     name: { type: "string" },
     hand: { type: "number" },
   },
-  required: ["name"],
+  required: ["name", "hand"],
 } as const;

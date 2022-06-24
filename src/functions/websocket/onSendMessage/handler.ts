@@ -1,12 +1,11 @@
 import { ApiGatewayManagementApi } from "aws-sdk";
 import { DeleteItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
-import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import type { APIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import { getDynamoClient } from "@domain/dynamodb";
-import schema from "./schema";
 
-const onSendMessage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event, context) => {
+const onSendMessage: APIGatewayHandler = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
@@ -25,12 +24,12 @@ const onSendMessage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
       endpoint: "http://localhost:3001",
       // endpoint: event.requestContext.domainName + "/" + event.requestContext.stage,
     });
-    const message = event.body;
+    const bodyJson = JSON.parse(event.body);
 
     connectionData.Items.forEach(async ({ connectionId }) => {
       try {
         await apigwManagementApi
-          .postToConnection({ ConnectionId: connectionId.S, Data: JSON.stringify(message) }, undefined)
+          .postToConnection({ ConnectionId: connectionId.S, Data: bodyJson.message }, undefined)
           .promise();
       } catch (e) {
         if (e.statusCode === 410) {

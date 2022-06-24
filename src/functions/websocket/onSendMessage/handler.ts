@@ -1,4 +1,4 @@
-import { ApiGatewayManagementApi } from "aws-sdk";
+import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 import { DeleteItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 import type { APIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
@@ -28,9 +28,7 @@ const onSendMessage: APIGatewayHandler = async (event, context) => {
 
     connectionData.Items.forEach(async ({ connectionId }) => {
       try {
-        await apigwManagementApi
-          .postToConnection({ ConnectionId: connectionId.S, Data: bodyJson.message }, undefined)
-          .promise();
+        await apigwManagementApi.postToConnection({ ConnectionId: connectionId.S, Data: bodyJson.message });
       } catch (e) {
         if (e.statusCode === 410) {
           console.log(`Found stale connection, deleting ${connectionId}`);

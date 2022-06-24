@@ -1,10 +1,10 @@
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
-import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import type { ValidatedAPIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import { getDynamoClient } from "src/domain/dynamodb";
 
-const getJankenList: ValidatedEventAPIGatewayProxyEvent<null> = async (event, context) => {
+const getJankenList: ValidatedAPIGatewayHandler<null> = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 

@@ -8,7 +8,7 @@
   ],
   "KeySchema": [
     {
-      "AttributeName": "connectionIs",
+      "AttributeName": "connectionId",
       "KeyType": "HASH"
     }
   ],

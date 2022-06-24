@@ -1,3 +1,4 @@
+require("dotenv").config();
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 export const getDynamoClient = () => {
@@ -5,7 +6,7 @@ export const getDynamoClient = () => {
     return new DynamoDBClient({
       region: "localhost",
       credentials: { accessKeyId: "hoge", secretAccessKey: "hoge" },
-      endpoint: "http://localhost:8000",
+      endpoint: `http://${process.env.DYNAMODB_HOST}:8000`,
     });
   } else {
     return new DynamoDBClient({});

@@ -1,5 +1,5 @@
 import { PutItemCommand } from "@aws-sdk/client-dynamodb";
-import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import type { ValidatedAPIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import { getDynamoClient } from "src/domain/dynamodb";
@@ -11,7 +11,7 @@ const judgeJanken = (a: number, b: number) => {
   return "lose";
 };
 
-const playJanken: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event, context) => {
+const playJanken: ValidatedAPIGatewayHandler<typeof schema> = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
   console.log("Received context:", JSON.stringify(context, null, 2));
 
@@ -20,8 +20,8 @@ const playJanken: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
   const unixtime = Math.floor(date.getTime() / 1000);
 
   const hand = ["rock", "scissors", "paper"];
-  const player_name = event.queryStringParameters.name;
-  const player_hand = event.queryStringParameters.hand;
+  const player_name = event.body.name;
+  const player_hand = event.body.hand;
   const player = hand.indexOf(player_hand);
   const computer = Math.floor(Math.random() * 3);
   const judge = judgeJanken(player, computer);

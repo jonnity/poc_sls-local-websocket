@@ -1,9 +1,8 @@
 import type { AWS } from "@serverless/typescript";
 
-import resources from "./serverless_config/dynamodb-jankens-migration.json";
-import hello from "@functions/hello";
-import getJankenResults from "@functions/getJankenResults";
-import playJanken from "@functions/playJanken";
+import jankensMigration from "./serverless_config/dynamodb-jankens-migration.json";
+import connectionsMigration from "./serverless_config/dynamodb-connections-migration.json";
+import { hello, getJankenResults, playJanken, onConnect, onDisconnect, onSendMessage } from "@functions/index";
 
 const serverlessConfiguration: AWS = {
   service: "sls-test",
@@ -12,6 +11,7 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: "aws",
     runtime: "nodejs14.x",
+    websocketsApiRouteSelectionExpression: "$request.body.action",
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -22,7 +22,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello, getJankenResults, playJanken },
+  functions: { hello, getJankenResults, playJanken, onConnect, onDisconnect, onSendMessage },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -60,7 +60,11 @@ const serverlessConfiguration: AWS = {
     Resources: {
       JankensTable: {
         Type: "AWS::DynamoDB::Table",
-        Properties: resources,
+        Properties: jankensMigration,
+      },
+      ConnectionsTable: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: connectionsMigration,
       },
     },
   },

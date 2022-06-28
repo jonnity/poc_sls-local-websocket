@@ -8,10 +8,10 @@ export default {
       http: {
         method: "post",
         path: "janken",
-      },
-      request: {
-        schemas: {
-          "application/json": schema,
+        request: {
+          schemas: {
+            "application/json": schema,
+          },
         },
       },
     },

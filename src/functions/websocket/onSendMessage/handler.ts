@@ -1,9 +1,11 @@
-import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 import { DeleteItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+
+import { getApigwManagementApi } from "@domain/getApigwManagementApi";
+import { getDynamodbClient } from "@domain/dynamodbClient";
 import type { APIGatewayHandler } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { getDynamodbClient } from "@domain/dynamodbClient";
+import { WebsocketResponse } from "@domain/WebsocketResponse";
 
 const onSendMessage: APIGatewayHandler = async (event, context) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
@@ -18,18 +20,12 @@ const onSendMessage: APIGatewayHandler = async (event, context) => {
       })
     );
 
-    const apigwManagementApi = new ApiGatewayManagementApi({
-      apiVersion: "2018-11-29",
-      endpoint:
-        event.requestContext.domainName === "localhost"
-          ? "http://localhost:3001"
-          : `${event.requestContext.domainName}/${event.requestContext.stage}`,
-    });
+    const apigwManagementApi = getApigwManagementApi(event.requestContext.domainName, event.requestContext.stage);
     const bodyJson = JSON.parse(event.body);
-
+    const response = WebsocketResponse.of("sendmessage", { message: bodyJson.message });
     connectionData.Items.forEach(async ({ connectionId }) => {
       try {
-        await apigwManagementApi.postToConnection({ ConnectionId: connectionId.S, Data: bodyJson.message });
+        await apigwManagementApi.postToConnection({ ConnectionId: connectionId.S, Data: response.sendingMessage() });
       } catch (e) {
         if (e.statusCode === 410) {
           console.log(`Found stale connection, deleting ${connectionId}`);

@@ -8,7 +8,7 @@ export class WebsocketResponse {
   sendingMessage() {
     const encoder = new TextEncoder();
     if (this.action === "pong") {
-      return encoder.encode(JSON.stringify("pong"));
+      return encoder.encode(JSON.stringify({ action: "pong" }));
     }
     return encoder.encode(JSON.stringify({ action: this.action, data: this.data }));
   }

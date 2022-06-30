@@ -22,12 +22,13 @@ const onSendMessage: APIGatewayHandler = async (event, context) => {
 
     const apigwManagementApi = getApigwManagementApi(event.requestContext.domainName, event.requestContext.stage);
     const bodyJson = JSON.parse(event.body);
-    const response = WebsocketResponse.of("sendmessage", { message: bodyJson.message });
+    const response = WebsocketResponse.of("message", { message: bodyJson.message });
     connectionData.Items.forEach(async ({ connectionId }) => {
       try {
-        await apigwManagementApi.postToConnection({ ConnectionId: connectionId.S, Data: response.sendingMessage() });
+        const data = response.sendingMessage();
+        await apigwManagementApi.postToConnection({ ConnectionId: connectionId.S, Data: data });
       } catch (e) {
-        if (e.statusCode === 410) {
+        if (e.statusCode === 410 || e.$metadata?.httpStatusCode == 410) {
           console.log(`Found stale connection, deleting ${connectionId}`);
           await dynamodb.send(new DeleteItemCommand({ TableName: "connections", Key: { connectionId } }));
         } else {
